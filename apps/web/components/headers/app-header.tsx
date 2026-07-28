@@ -32,9 +32,14 @@ export function AppHeader({ className }: { className?: string }) {
           </Link>
         </nav>
       </div>
-      <span className="text-muted-foreground font-mono text-xs">
-        ui.deessejs.com
-      </span>
+      <a
+        href="https://deessejs.com"
+        target="_blank"
+        rel="noreferrer"
+        className="text-muted-foreground hover:text-foreground font-mono text-xs transition-colors"
+      >
+        deessejs.com ↗
+      </a>
     </header>
   )
 }
