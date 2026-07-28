@@ -17,7 +17,7 @@ export default function Page() {
           <section className="flex flex-col gap-3">
             <h1 className="text-3xl font-semibold tracking-tight">Components</h1>
             <p className="text-muted-foreground max-w-2xl">
-              The deessejs.com component library.
+              The DeesseJS.com component library.
             </p>
             <p className="text-muted-foreground font-mono text-xs">
               {TOTAL_COUNT} components across {CATEGORIES.length} categories.
