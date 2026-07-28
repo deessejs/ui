@@ -6,7 +6,7 @@
   </picture>
 </p>
 
-<h1 align="center">deessejs UI</h1>
+<h1 align="center">DeesseJS UI</h1>
 
 <p align="center">
   <strong>The official component registry for deessejs.com.</strong>
