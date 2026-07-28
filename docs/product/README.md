@@ -1,91 +1,106 @@
-# deessejs UI Registry
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="public/banner-ds.svg">
+    <source media="(prefers-color-scheme: light)" srcset="public/banner-ds.svg">
+    <img src="public/banner-ds.svg" alt="deessejs UI banner" width="900">
+  </picture>
+</p>
 
-The official component registry of [deessejs.com](https://deessejs.com), published at **[ui.deessejs.com](https://ui.deessejs.com)**.
+<h1 align="center">deessejs UI</h1>
 
-A showcase of every UI component used across the deessejs.com product surface. Each component is rendered live, grouped by category, and presented with its source code.
+<p align="center">
+  <strong>The official component registry for deessejs.com.</strong>
+  Real components, live preview, source shown verbatim.
+</p>
 
-## What this is
+<p align="center">
+  <a href="https://github.com/deessejs/ui/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/deessejs/ui" alt="License">
+  </a>
+  <a href="https://github.com/deessejs/ui/actions/workflows/ci.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/deessejs/ui/ci.yml?label=CI" alt="CI">
+  </a>
+  <a href="https://github.com/deessejs/ui/stargazers">
+    <img src="https://img.shields.io/github/stars/deessejs/ui?style=social" alt="Stars">
+  </a>
+</p>
 
-`design/` is a monorepo that hosts the registry site (`apps/web`) and the component library it consumes (`packages/ui`).
+<p align="center">
+  <a href="https://ui.deessejs.com">View live site →</a>
+  &nbsp;&nbsp;&nbsp;
+  <a href="https://github.com/deessejs/ui">Browse source →</a>
+</p>
 
-The registry is **local-first**: components live in this repository, and adding a new component ships on the next deploy. There is no runtime registration, no admin API, no database. The site is fully static from the user's perspective.
+---
 
-## Components and blocks
+## What's in this repo
 
-The registry lists two kinds of items, both following the same routing pattern:
+| Path | Role | Notes |
+|---|---|---|
+| `apps/web/` | Showcase site | Next.js 16, deployed at `ui.deessejs.com` |
+| `packages/registry/` | Component library | Real `.tsx` components, each with `index.tsx` + `meta.ts` |
+| `packages/ui/` | shadcn primitives | Base UI (not Radix) + Tailwind v4 tokens |
+| `learnings/` | Design research | The anti-slop thesis behind the design system |
 
-- **Components** — atomic UI primitives (buttons, inputs, dialogs, …). What other registries typically call "components" or "ui".
-- **Blocks** — composed, larger pieces that wire components together (a pricing card, a hero-with-claim, a feature grid, a settings panel). What other registries typically call "blocks" or "sections".
+## Why this registry
 
-The distinction is size and intent, not technology: a block is a React component that lives in the same workspace and uses the same tokens. The taxonomy here is the same one unpacked in `docs/learnings/marketing-ui/`.
+- **Real components, not wrappers.** Each component lives as a real `.tsx` file. The registry ships actual code you can copy.
+- **Source shown verbatim.** The "Code" tab on every detail page is the real file content, extracted via `fs.readFileSync` — not generated stubs.
+- **Live preview, not screenshots.** Each component renders in the page, so you see what it actually does, not a mock.
+- **Themable by tokens.** Every color, every gap follows the design system. No raw palette utilities escape into the registry.
+- **Designed for AI agents.** Components are real, discoverable, and copyable — no abstractions to fight through.
 
-## The pages
+## Adding a component
+
+1. Create `packages/registry/src/components/<id>/` with two files:
+   - `index.tsx` — exports the component plus a `Demo` function
+   - `meta.ts` — `ComponentMeta { id, name, description, category, variants? }`
+2. Register in `apps/web/lib/registry/`:
+   - Import the component and `Demo` in `index.ts`
+   - Add the `fs.readFileSync` source in `sources.ts`
+   - Append to `COMPONENT_REGISTRY`
+3. Run `npm run typecheck` to confirm the build still passes.
+4. Push. The registry re-deploys with the new component on the next Vercel build.
+
+> [!TIP]
+> The `Demo` export renders the component in the preview tab. Keep it self-contained — no external state, no providers.
+
+## Project structure
 
 ```
-/                                       Homepage — grid of components and blocks
-/components                             Components index — all categories
-/components/[category_id]               Component category page
-/components/[category_id]/[component_id] Component detail page — visual + source code
-/blocks                                 Blocks index — all categories
-/blocks/[category_id]                   Block category page
-/blocks/[category_id]/[block_id]        Block detail page — visual + source code
-```
-
-The category and item IDs are slug-style identifiers that match the entries in the registry manifest — the single source of truth that drives the home grid and the category pages.
-
-## The deploy-to-add model
-
-Components and blocks are not registered at runtime. They are committed to this repository and ship when the site is deployed.
-
-To add a new component:
-
-1. Add the component to `packages/ui/src/components/`.
-2. Register it in the registry manifest (the single source of truth for what the site lists).
-3. Open a pull request. The new component ships on the next deploy.
-
-To add a new block:
-
-1. Add the block to `packages/ui/src/blocks/`.
-2. Register it in the registry manifest under the blocks section.
-3. Open a pull request. The new block ships on the next deploy.
-
-This is the deliberate trade-off. The registry is read-only at runtime, so the public site needs no API, no auth, and no persistence. The cost is that every addition is a code change — reviewable, versionable, and visible in the git history.
-
-## Stack
-
-- **Next.js 16** (App Router) — see the root `AGENTS.md` for the warning on breaking changes in this version.
-- **React 19**
-- **Tailwind CSS v4** with semantic tokens; raw palette utilities are not used.
-- **shadcn/ui** on **Base UI** (not Radix), `base-nova` style, `neutral` base color, `lucide` icons.
-- **Turbo** for the monorepo. Workspaces: `apps/*` and `packages/*`.
-
-The design system that backs the components is documented under `docs/learnings/`. The short version: tokens are enforced at the compiler level (`--color-*: initial`), components are real React components living in the workspace, and the layout theory follows the Vercel/Linear playbook captured in `docs/learnings/layout/`.
-
-## Repository layout
-
-```
-design/
+.
 ├── apps/
-│   └── web/                       The registry site (Next.js 16)
-│       ├── app/                   App Router routes (/, /components/...)
-│       ├── components/            App-level components
-│       └── components.json        shadcn config — tied to packages/ui
+│   └── web/                Next.js 16 showcase site
 ├── packages/
-│   ├── ui/                        @workspace/ui — the component library
-│   │   └── src/components/        Where new components are added
-│   │   └── src/blocks/            Where new blocks are added
-│   ├── eslint-config/             Shared ESLint config
-│   └── typescript-config/         Shared TypeScript configs
+│   ├── registry/           @workspace/registry — the deessejs component library
+│   │   └── src/components/  One folder per component (index.tsx + meta.ts)
+│   ├── ui/                 @workspace/ui — shadcn primitives (Base UI)
+│   ├── eslint-config/      Shared ESLint config
+│   └── typescript-config/  Shared TypeScript configs
 ├── docs/
-│   ├── product/                   Product documentation (this README)
-│   └── learnings/                 Research notes — back the design system
-├── AGENTS.md                      Agent context for the repository
-└── turbo.json                     Monorepo task graph
+│   ├── product/            This README lives here
+│   └── learnings/          Design research (anti-slop thesis)
+├── turbo.json              Monorepo task graph
+└── package.json            Workspaces: apps/*, packages/*
 ```
 
-## Where to start
+## Architecture notes
 
-- **Adding a component:** see the existing components in `packages/ui/src/components/` for the pattern, then update the registry manifest.
-- **Adding a block:** see `packages/ui/src/blocks/` (when populated) and the conventions in `docs/learnings/marketing-ui/`. The block should compose existing components and stay within the design system tokens.
-- **Design system reference:** see `docs/learnings/`. The `agent-system/` folder states the encodeable design rules; `layout/` covers the composition theory; `marketing-ui/` catalogs the evocative primitives; `page-content/` covers section content.
-- **Agent instructions:** see `AGENTS.md` at the root before writing any Next.js code.
+- **shadcn on Base UI, not Radix.** We import from `@workspace/ui/components/*` which uses `@base-ui/react/*` primitives. All shadcn components (Tabs, Breadcrumb, Empty, etc.) follow this.
+- **Source extraction via `fs.readFileSync`.** The `Code` tab pulls content from `packages/registry/src/**/*.tsx` at module load. Earlier attempts with `?raw` imports failed in the Next.js + Turbopack + workspaces context.
+- **Dual-theme syntax highlighting.** Shiki emits `--shiki-light` and `--shiki-dark` CSS variables per token. `globals.css` switches based on the `.dark` class. Zero client JS for theme switching.
+- **Registry seam for the future DB.** `apps/web/lib/registry/index.ts` is the single entry point. When components move to a database, only this file changes — pages don't.
+
+## Contributing
+
+Open an issue to discuss larger changes. For typos, broken links, and small fixes, PRs are welcome.
+
+## License
+
+[MIT](./LICENSE). See the LICENSE file for details.
+
+## Support
+
+- Issues: [github.com/deessejs/ui/issues](https://github.com/deessejs/ui/issues)
+- Discussions: [github.com/deessejs/ui/discussions](https://github.com/deessejs/ui/discussions)
+- Email: [support@deessejs.com](mailto:support@deessejs.com)
