@@ -2,7 +2,7 @@ import { CategoryCard } from "@/components/cards"
 import { CategoryNav } from "@/components/nav"
 import { getEnrichedBlockCategories } from "@/lib/registry"
 
-const CATEGORIES = getEnrichedBlockCategories()
+const CATEGORIES = getEnrichedBlockCategories().filter((c) => c.count > 0)
 const TOTAL_COUNT = CATEGORIES.reduce((sum, c) => sum + c.count, 0)
 
 export default function Page() {
@@ -22,7 +22,7 @@ export default function Page() {
             </p>
           </section>
 
-          <section className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <section className="border-border grid grid-cols-1 divide-y divide-border border sm:grid-cols-2 sm:divide-y-0 sm:divide-x">
             {CATEGORIES.map((category) => (
               <CategoryCard
                 key={category.id}
@@ -30,7 +30,7 @@ export default function Page() {
                 name={category.name}
                 count={category.count}
                 description={category.description}
-                previewAspect="video"
+                preview={<category.Preview />}
               />
             ))}
           </section>

@@ -4,6 +4,11 @@ import {
 } from "@workspace/registry/components/button"
 import { meta as buttonMeta } from "@workspace/registry/components/button/meta"
 import {
+  ColoredBadge,
+  ColoredBadgeDemo,
+} from "@workspace/registry/components/colored-badge"
+import { meta as coloredBadgeMeta } from "@workspace/registry/components/colored-badge/meta"
+import {
   IconButton,
   IconButtonDemo,
 } from "@workspace/registry/components/icon-button"
@@ -34,6 +39,12 @@ const COMPONENT_REGISTRY: ComponentEntry[] = [
     source: SOURCES.components.button,
   },
   {
+    ...coloredBadgeMeta,
+    Component: ColoredBadge,
+    Demo: ColoredBadgeDemo,
+    source: SOURCES.components["colored-badge"],
+  },
+  {
     ...iconButtonMeta,
     Component: IconButton,
     Demo: IconButtonDemo,
@@ -50,6 +61,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   navigation: "Navigation",
   feedback: "Feedback",
   overlay: "Overlay",
+  badges: "Badges",
   marketing: "Marketing",
   application: "Application",
   auth: "Auth",
@@ -65,6 +77,7 @@ const CATEGORY_DESCRIPTIONS: Record<string, string> = {
   navigation: "Tabs, breadcrumbs, and step indicators.",
   feedback: "Alerts, toasts, and status indicators.",
   overlay: "Modals, sheets, popovers, and drawers.",
+  badges: "Status, count, and category labels.",
   marketing: "Hero, pricing, and feature grids.",
   application: "Settings panels, dashboards, and tables.",
   auth: "Login, signup, and password recovery flows.",
@@ -79,6 +92,7 @@ export type EnrichedComponentCategory = {
   description: string
   items: ComponentEntry[]
   count: number
+  Preview: React.ComponentType
 }
 
 export type EnrichedBlockCategory = {
@@ -87,6 +101,7 @@ export type EnrichedBlockCategory = {
   description: string
   items: BlockEntry[]
   count: number
+  Preview: React.ComponentType
 }
 
 function enrichComponent(categoryId: string): EnrichedComponentCategory {
@@ -97,6 +112,7 @@ function enrichComponent(categoryId: string): EnrichedComponentCategory {
     description: CATEGORY_DESCRIPTIONS[categoryId] ?? "",
     items,
     count: items.length,
+    Preview: deriveComponentPreview(items),
   }
 }
 
@@ -108,7 +124,25 @@ function enrichBlock(categoryId: string): EnrichedBlockCategory {
     description: CATEGORY_DESCRIPTIONS[categoryId] ?? "",
     items,
     count: items.length,
+    Preview: deriveBlockPreview(items),
   }
+}
+
+/**
+ * Derives a category Preview from the items it contains. Picks the first item's
+ * Demo so every populated category shows something. Categories with no items
+ * are filtered out by callers (the index page only renders categories with count > 0).
+ */
+function deriveComponentPreview(items: ComponentEntry[]): React.ComponentType {
+  const First = items[0]!
+  const Demo = First.Demo
+  return () => <Demo />
+}
+
+function deriveBlockPreview(items: BlockEntry[]): React.ComponentType {
+  const First = items[0]!
+  const Block = First.Block
+  return () => <Block />
 }
 
 export function getEnrichedComponentCategories(): EnrichedComponentCategory[] {

@@ -5,6 +5,7 @@ export const COMPONENT_CATEGORIES = [
   "navigation",
   "feedback",
   "overlay",
+  "badges",
 ] as const
 
 export const BLOCK_CATEGORIES = [

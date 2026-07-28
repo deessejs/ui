@@ -1,35 +1,32 @@
-import Link from "next/link"
+import type { ReactNode } from "react"
 
-import { cn } from "@workspace/ui/lib/utils"
+import Link from "next/link"
 
 interface CategoryCardProps {
   href: string
   name: string
   count: number
+  preview: ReactNode
   countLabel?: string
   description?: string
-  previewAspect?: "4/3" | "video"
 }
 
 export function CategoryCard({
   href,
   name,
   count,
+  preview,
   countLabel = "items",
   description,
-  previewAspect = "4/3",
 }: CategoryCardProps) {
   return (
     <Link
       href={href}
-      className="border-border/60 bg-card hover:border-foreground/20 group flex flex-col overflow-hidden rounded-lg border transition-colors"
+      className="group bg-background hover:bg-muted/30 flex flex-col overflow-hidden transition-colors"
     >
-      <div
-        className={cn(
-          "bg-muted/30",
-          previewAspect === "video" ? "aspect-video" : "aspect-[4/3]"
-        )}
-      />
+      <div className="border-b-border flex h-60 items-center justify-center overflow-hidden border-b p-6">
+        {preview}
+      </div>
       <div className="flex flex-col gap-1 p-4">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-medium">{name}</h2>

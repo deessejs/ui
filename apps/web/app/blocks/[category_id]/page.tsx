@@ -93,16 +93,21 @@ export default async function Page({ params }: { params: Params }) {
             </p>
           </section>
 
-          <section className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            {category.items.map((item) => (
-              <ItemCard
-                key={item.id}
-                href={`/blocks/${category_id}/${item.id}`}
-                name={item.name}
-                description={item.description}
-                previewAspect="4/3"
-              />
-            ))}
+          <section className="border-border grid grid-cols-1 divide-y divide-border border sm:grid-cols-2 sm:divide-y-0 sm:divide-x">
+            {category.items.map((item, index) => {
+              const spansTwo = index === category.items.length - 1 && category.items.length % 2 === 1
+              return (
+                <ItemCard
+                  key={item.id}
+                  href={`/blocks/${category_id}/${item.id}`}
+                  name={item.name}
+                  description={item.description}
+                  preview={<item.Block />}
+                  className={spansTwo ? "sm:col-span-2" : undefined}
+                  previewClassName={spansTwo ? "sm:h-60" : undefined}
+                />
+              )
+            })}
           </section>
         </div>
       </div>
