@@ -1,6 +1,9 @@
 import { Geist, Geist_Mono } from "next/font/google"
 
 import "@workspace/ui/globals.css"
+import "./globals.css"
+import { AppFooter } from "@/components/footers"
+import { AppHeader } from "@/components/headers"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@workspace/ui/lib/utils";
 
@@ -22,8 +25,12 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn("antialiased", fontMono.variable, "font-sans", geist.variable)}
     >
-      <body>
-        <ThemeProvider>{children}</ThemeProvider>
+      <body className="flex min-h-svh flex-col">
+        <ThemeProvider>
+          <AppHeader />
+          <main className="flex-1">{children}</main>
+          <AppFooter />
+        </ThemeProvider>
       </body>
     </html>
   )

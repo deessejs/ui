@@ -1,0 +1,33 @@
+/* Shiki dark-mode overrides for code blocks.
+   Inherits from packages/ui/src/styles/globals.css (loaded first in layout.tsx).
+   These rules take effect in dark mode (both system preference and html.dark class). */
+
+@media (prefers-color-scheme: dark) {
+  .shiki,
+  .shiki span {
+    background-color: #0a0a0a !important;
+  }
+}
+
+html.dark .shiki,
+html.dark .shiki span {
+  background-color: #0a0a0a !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .shiki,
+  .shiki span {
+    background-color: var(--bg-background) !important;
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+  }
+}
+
+html.dark .shiki,
+html.dark .shiki span {
+  background-color: var(--bg-background) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}

@@ -126,4 +126,16 @@
   body {
     @apply bg-background text-foreground;
     }
+
+  /* Shiki dual themes — light by default, dark via the .dark class */
+  .shiki,
+  .shiki span {
+    color: var(--shiki-light);
+    background-color: var(--shiki-light-bg);
+  }
+  .dark .shiki,
+  .dark .shiki span {
+    color: var(--shiki-dark);
+    background-color: var(--shiki-dark-bg);
+  }
 }
