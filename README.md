@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="public/banner-ds.svg">
-    <source media="(prefers-color-scheme: light)" srcset="public/banner-ds.svg">
+    <source media="(prefers-color-scheme: dark)" srcset="public/banner-ds.jpg">
+    <source media="(prefers-color-scheme: light)" srcset="public/banner-ds.jpg">
     <img src="public/banner-ds.svg" alt="deessejs UI banner" width="900">
   </picture>
 </p>
