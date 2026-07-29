@@ -94,6 +94,7 @@ const install = spawnSync(
     "class-variance-authority",
     "clsx",
     "tailwind-merge",
+    "lucide-react",
     "typescript@^5",
   ],
   { cwd: SHIM, stdio: "pipe", shell: true }
