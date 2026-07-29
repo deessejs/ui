@@ -1,0 +1,20 @@
+{
+  "name": "ds-icon-button",
+  "type": "registry:ui",
+  "title": "Icon Button",
+  "description": "DeesseJS icon-only button — Base UI primitive with sm/md/lg size variants and required aria-label.",
+  "dependencies": [
+    "@base-ui/react@^1.6.0",
+    "class-variance-authority",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "registry/base-nova/ds-icon-button/ds-icon-button.tsx",
+      "type": "registry:ui",
+      "target": "@ui/ds-icon-button.tsx",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { Button as ButtonPrimitive } from \"@base-ui/react/button\"\nimport { cva, type VariantProps } from \"class-variance-authority\"\n\nimport { cn } from \"@/lib/utils\"\n\nconst iconButtonVariants = cva(\"\", {\n  variants: {\n    size: {\n      sm: \"size-8\",\n      md: \"size-10\",\n      lg: \"size-12\",\n    },\n  },\n  defaultVariants: {\n    size: \"md\",\n  },\n})\n\nexport interface DsIconButtonProps\n  extends ButtonPrimitive.Props,\n    VariantProps<typeof iconButtonVariants> {\n  \"aria-label\": string\n  className?: string\n  children: React.ReactNode\n}\n\nfunction DsIconButton({\n  className,\n  size,\n  type = \"button\",\n  children,\n  ...props\n}: DsIconButtonProps) {\n  return (\n    <ButtonPrimitive\n      type={type}\n      data-slot=\"icon-button\"\n      className={cn(\n        \"inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/80\",\n        iconButtonVariants({ size }),\n        className\n      )}\n      {...props}\n    >\n      {children}\n    </ButtonPrimitive>\n  )\n}\n\nexport { DsIconButton, iconButtonVariants as dsIconButtonVariants }\n"
+    }
+  ]
+}

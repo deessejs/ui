@@ -1,0 +1,18 @@
+{
+  "name": "ds-colored-badge",
+  "type": "registry:ui",
+  "title": "Colored Badge",
+  "description": "DeesseJS badge with semantic color variants (blue, green, red, yellow, orange, purple, pink, gray). Self-contained — no Base UI dependency.",
+  "dependencies": [
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "registry/base-nova/ds-colored-badge/ds-colored-badge.tsx",
+      "type": "registry:ui",
+      "target": "@ui/ds-colored-badge.tsx",
+      "content": "import * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\n\nexport type DsColoredBadgeColor =\n  | \"blue\"\n  | \"green\"\n  | \"red\"\n  | \"yellow\"\n  | \"orange\"\n  | \"purple\"\n  | \"pink\"\n  | \"gray\"\n\nconst COLOR_CLASSES: Record<DsColoredBadgeColor, string> = {\n  blue: \"bg-blue-500/10 text-blue-500 border-blue-500/20\",\n  green: \"bg-green-500/10 text-green-500 border-green-500/20\",\n  red: \"bg-red-500/10 text-red-500 border-red-500/20\",\n  yellow: \"bg-yellow-500/10 text-yellow-500 border-yellow-500/20\",\n  orange: \"bg-orange-500/10 text-orange-500 border-orange-500/20\",\n  purple: \"bg-purple-500/10 text-purple-500 border-purple-500/20\",\n  pink: \"bg-pink-500/10 text-pink-500 border-pink-500/20\",\n  gray: \"bg-gray-500/10 text-gray-500 border-gray-500/20\",\n}\n\nexport interface DsColoredBadgeProps {\n  color: DsColoredBadgeColor\n  className?: string\n  children: React.ReactNode\n}\n\nexport function DsColoredBadge({\n  color,\n  className,\n  children,\n}: DsColoredBadgeProps) {\n  return (\n    <span\n      className={cn(\n        \"inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-medium\",\n        COLOR_CLASSES[color],\n        className\n      )}\n    >\n      {children}\n    </span>\n  )\n}\n"
+    }
+  ]
+}

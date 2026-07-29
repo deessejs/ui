@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    name: Validate registry
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build registry sources
+        run: npm run registry:build --workspace web
+
+      - name: Assert generated JSONs exist
+        run: |
+          set -euo pipefail
+          test -f apps/web/public/r/registry.json
+          test -f apps/web/public/r/ds-button.json
+          test -f apps/web/public/r/ds-icon-button.json
+          test -f apps/web/public/r/ds-colored-badge.json
+
+      - name: Registry validate (shadcn CLI)
+        run: npx --yes shadcn@latest registry validate deessejs/ui
