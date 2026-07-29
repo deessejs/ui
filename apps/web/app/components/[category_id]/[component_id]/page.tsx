@@ -1,6 +1,7 @@
 import Link from "next/link"
 
 import { CodeBlock } from "@/components/code-block"
+import { InstallCommand } from "@/components/install-command"
 import { CategoryNav } from "@/components/nav"
 import { ComponentPager } from "@/components/pager"
 import {
@@ -131,6 +132,8 @@ export default async function Page({ params }: { params: Params }) {
               Component {currentIndex + 1} of {category.items.length}
             </p>
           </section>
+
+          <InstallCommand itemId={component.id} />
 
           <Tabs defaultValue="preview">
             <TabsList>

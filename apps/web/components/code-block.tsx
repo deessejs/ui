@@ -4,7 +4,7 @@ import { jsx, jsxs } from "react/jsx-runtime"
 
 import { getHighlighter } from "@/lib/shiki"
 
-type SupportedLang = "tsx" | "typescript" | "jsx" | "javascript"
+type SupportedLang = "tsx" | "typescript" | "jsx" | "javascript" | "bash"
 
 interface CodeBlockProps {
   code: string
