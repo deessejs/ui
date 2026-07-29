@@ -59,3 +59,14 @@ export function EmptyState({
     </Empty>
   )
 }
+
+export function EmptyStateBlockDemo() {
+  return (
+    <EmptyState
+      badge={{ label: "Empty", color: "gray" }}
+      title="No projects yet"
+      description="Get started by creating your first project."
+      action={{ label: "Create project" }}
+    />
+  )
+}
