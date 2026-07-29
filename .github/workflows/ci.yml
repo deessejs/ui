@@ -110,3 +110,22 @@ jobs:
           node-version: "20"
           cache: npm
       - run: node apps/web/scripts/contract-test.mjs
+
+  # Drift detection. Runs check-registry-drift.mjs, which compares the
+  # consumer-facing source (registry/base-nova/...) against the showcase
+  # tree (packages/registry/...) and, when applicable, the workspace source
+  # (packages/ui/...). Catches silent divergence introduced when only one
+  # side of a duplicated component is updated. See
+  # docs/plans/2026-07-29-drift-detection.md for the tolerance policy and
+  # docs/registry/audit-2026-07-29.json for the per-item paths the
+  # script reads.
+  drift:
+    name: Drift detection
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+          cache: npm
+      - run: node apps/web/scripts/check-registry-drift.mjs
