@@ -1,0 +1,62 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "deessejs",
+  "homepage": "https://github.com/deessejs/ui",
+  "items": [
+    {
+      "name": "ds-button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "DeesseJS button — Base UI primitive on shadcn base-nova tokens, with variant and size styles.",
+      "dependencies": [
+        "@base-ui/react@^1.6.0",
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/ds-button/ds-button.tsx",
+          "type": "registry:ui",
+          "target": "@ui/ds-button.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ds-icon-button",
+      "type": "registry:ui",
+      "title": "Icon Button",
+      "description": "DeesseJS icon-only button — Base UI primitive with sm/md/lg size variants and required aria-label.",
+      "dependencies": [
+        "@base-ui/react@^1.6.0",
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/ds-icon-button/ds-icon-button.tsx",
+          "type": "registry:ui",
+          "target": "@ui/ds-icon-button.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ds-colored-badge",
+      "type": "registry:ui",
+      "title": "Colored Badge",
+      "description": "DeesseJS badge with semantic color variants (blue, green, red, yellow, orange, purple, pink, gray). Self-contained — no Base UI dependency.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/ds-colored-badge/ds-colored-badge.tsx",
+          "type": "registry:ui",
+          "target": "@ui/ds-colored-badge.tsx"
+        }
+      ]
+    }
+  ]
+}

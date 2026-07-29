@@ -1,0 +1,76 @@
+{
+  "$schema": "./audit-schema-not-yet-defined.json",
+  "audit-version": "2026-07-29",
+  "audit-source": "manual-inspection-of-files",
+  "tolerance-policy-ref": "../plans/2026-07-29-drift-detection.md",
+  "items": {
+    "ds-button": {
+      "showcase-category": "shim",
+      "consumer-path": "registry/base-nova/ds-button/ds-button.tsx",
+      "showcase-path": "packages/registry/src/components/button/index.tsx",
+      "workspace-source-path": "packages/ui/src/components/button.tsx",
+      "drift-axes": ["workspace-vs-consumer"],
+      "behavioral-divergence-risk": "high",
+      "current-state": "class-strings-and-variant-keys-identical-by-construction",
+      "manual-sync-required": true,
+      "per-check": {
+        "variant-keys-workspace-vs-consumer": "strict-pass",
+        "size-keys-workspace-vs-consumer": "strict-pass",
+        "class-base-string-workspace-vs-consumer": "strict-pass",
+        "class-variant-strings-workspace-vs-consumer": "strict-pass-by-inspection",
+        "showcase-imports-from-workspace": "loose-pass"
+      },
+      "allowed-divergences": {
+        "export-name-showcase-vs-consumer": { "showcase": "Button", "consumer": "DsButton" },
+        "export-name-variants-showcase-vs-consumer": { "showcase": "buttonVariants", "consumer": "dsButtonVariants" },
+        "import-path-showcase-vs-consumer": {
+          "showcase": "@workspace/ui/lib/utils",
+          "consumer": "@/lib/utils"
+        }
+      }
+    },
+    "ds-icon-button": {
+      "showcase-category": "shim",
+      "consumer-path": "registry/base-nova/ds-icon-button/ds-icon-button.tsx",
+      "showcase-path": "packages/registry/src/components/icon-button/index.tsx",
+      "workspace-source-path": null,
+      "drift-axes": ["showcase-vs-consumer-styling"],
+      "behavioral-divergence-risk": "medium",
+      "current-state": "size-mapping-identical-but-authored-separately",
+      "manual-sync-required": true,
+      "per-check": {
+        "size-mapping-showcase-vs-consumer": "strict-pass"
+      },
+      "allowed-divergences": {
+        "aria-label-typing": {
+          "showcase": "inherited-from-ShadcnButton-prop-typing",
+          "consumer": "required-on-DsIconButtonProps"
+        }
+      }
+    },
+    "ds-colored-badge": {
+      "showcase-category": "shim",
+      "consumer-path": "registry/base-nova/ds-colored-badge/ds-colored-badge.tsx",
+      "showcase-path": "packages/registry/src/components/colored-badge/index.tsx",
+      "workspace-source-path": "packages/ui/src/components/badge.tsx",
+      "drift-axes": [
+        "showcase-vs-consumer-styling",
+        "consumer-vs-workspace-styling"
+      ],
+      "behavioral-divergence-risk": "high",
+      "current-state": "color-classes-identical-but-base-element-and-shape-differ",
+      "concrete-divergence-observed": true,
+      "divergence-detail": {
+        "showcase-renders": "Badge(variant=outline) + color overlay -> pill shape (rounded-4xl, h-5), focus ring present",
+        "consumer-renders": "raw <span> + color overlay -> rounded-md, px-2.5 py-0.5, no focus ring",
+        "color-map-showcase-vs-consumer": "identical (8 keys, identical class strings)"
+      },
+      "per-check": {
+        "color-map-showcase-vs-consumer": "strict-pass",
+        "base-element-showcase-vs-consumer": "FAIL — showcase=Badge primitive, consumer=<span>",
+        "shape-showcase-vs-consumer": "FAIL — showcase=rounded-4xl+h-5, consumer=rounded-md+inline-flex"
+      },
+      "recommended-fix": "make-ds-colored-badge-match-the-showcase-rendering-or-flip-the-direction-of-collapse-so-showcase-renders-the-consumer"
+    }
+  }
+}

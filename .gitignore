@@ -12,6 +12,7 @@ node_modules
 
 # testing
 coverage
+.contract-test/  # ephemeral shim project created by apps/web/scripts/contract-test.mjs
 
 # next.js
 .next/
