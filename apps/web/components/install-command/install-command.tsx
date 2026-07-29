@@ -1,4 +1,4 @@
-import { CodeBlock } from "@/components/code-block"
+import { CommandBlock } from "@/components/command-block"
 
 interface InstallCommandProps {
   itemId: string
@@ -20,7 +20,7 @@ export function InstallCommand({ itemId }: InstallCommandProps) {
         Add this component to your project with the shadcn CLI. Pick the
         mode that matches how you installed the registry.
       </p>
-      <CodeBlock code={githubCmd} lang="bash" />
+      <CommandBlock code={githubCmd} label="bash" />
       <details className="text-muted-foreground text-sm">
         <summary className="cursor-pointer select-none">
           Other install modes
@@ -30,14 +30,14 @@ export function InstallCommand({ itemId }: InstallCommandProps) {
             <p className="text-xs">
               URL mode — works against the deployed showcase site:
             </p>
-            <CodeBlock code={urlCmd} lang="bash" />
+            <CommandBlock code={urlCmd} label="bash" />
           </div>
           <div className="flex flex-col gap-2">
             <p className="text-xs">
               Namespace mode — register once, then any item by short name:
             </p>
-            <CodeBlock code={namespaceSetup} lang="bash" />
-            <CodeBlock code={namespaceUse} lang="bash" />
+            <CommandBlock code={namespaceSetup} label="bash" />
+            <CommandBlock code={namespaceUse} label="bash" />
           </div>
         </div>
       </details>
