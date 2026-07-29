@@ -57,6 +57,96 @@
           "target": "@ui/ds-colored-badge.tsx"
         }
       ]
+    },
+    {
+      "name": "ds-breadcrumb",
+      "type": "registry:ui",
+      "title": "Breadcrumb",
+      "description": "DeesseJS hierarchical navigation trail — Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator, BreadcrumbEllipsis. Uses Base UI useRender for polymorphic link + lucide-react icons.",
+      "dependencies": [
+        "@base-ui/react@^1.6.0",
+        "clsx",
+        "tailwind-merge",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/ds-breadcrumb/ds-breadcrumb.tsx",
+          "type": "registry:ui",
+          "target": "@ui/ds-breadcrumb.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ds-empty",
+      "type": "registry:ui",
+      "title": "Empty",
+      "description": "DeesseJS composable empty-state placeholder — Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription, EmptyContent. No Base UI dependency.",
+      "dependencies": [
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/ds-empty/ds-empty.tsx",
+          "type": "registry:ui",
+          "target": "@ui/ds-empty.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ds-tabs",
+      "type": "registry:ui",
+      "title": "Tabs",
+      "description": "DeesseJS tabbed content on the Base UI Tabs primitive — Tabs, TabsList (default/line variants), TabsTrigger, TabsContent. Horizontal and vertical orientations.",
+      "dependencies": [
+        "@base-ui/react@^1.6.0",
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/ds-tabs/ds-tabs.tsx",
+          "type": "registry:ui",
+          "target": "@ui/ds-tabs.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ds-input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "DeesseJS single-line text input with token-driven borders, focus ring, aria-invalid styling. Self-contained — no Base UI dependency.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/ds-input/ds-input.tsx",
+          "type": "registry:ui",
+          "target": "@ui/ds-input.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ds-textarea",
+      "type": "registry:ui",
+      "title": "Textarea",
+      "description": "DeesseJS multi-line textarea with token-driven borders, focus ring, aria-invalid styling. Self-contained — no Base UI dependency.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/ds-textarea/ds-textarea.tsx",
+          "type": "registry:ui",
+          "target": "@ui/ds-textarea.tsx"
+        }
+      ]
     }
   ]
 }

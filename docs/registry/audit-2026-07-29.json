@@ -77,6 +77,106 @@
         "shape-showcase-vs-consumer": "equivalent-via-inline"
       },
       "recommended-fix": "n/a — current state ships in v1.1; if workspace Badge primitive updates, d90b7d9 comment notes this string must be re-pasted. Drift script will catch silent drift if either side moves."
+    },
+    "ds-breadcrumb": {
+      "showcase-category": "shim",
+      "consumer-path": "registry/base-nova/ds-breadcrumb/ds-breadcrumb.tsx",
+      "showcase-path": "packages/registry/src/components/breadcrumb/index.tsx",
+      "workspace-source-path": "packages/ui/src/components/breadcrumb.tsx",
+      "drift-axes": ["showcase-vs-consumer-exports", "consumer-vs-workspace"],
+      "behavioral-divergence-risk": "low",
+      "current-state": "exports-7-sub-components-identical-by-construction-classes-copied-from-workspace",
+      "per-check": {
+        "export-list-showcase-vs-consumer": "strict-pass",
+        "class-strings-showcase-vs-consumer": "strict-pass",
+        "showcase-imports-from-workspace": "loose-pass"
+      },
+      "allowed-divergences": {
+        "import-path-showcase-vs-consumer": {
+          "showcase": "@workspace/ui/components/breadcrumb",
+          "consumer": "@/lib/utils + @base-ui/react/merge-props + @base-ui/react/use-render + lucide-react"
+        }
+      }
+    },
+    "ds-empty": {
+      "showcase-category": "shim",
+      "consumer-path": "registry/base-nova/ds-empty/ds-empty.tsx",
+      "showcase-path": "packages/registry/src/components/empty/index.tsx",
+      "workspace-source-path": "packages/ui/src/components/empty.tsx",
+      "drift-axes": ["showcase-vs-consumer-exports", "consumer-vs-workspace"],
+      "behavioral-divergence-risk": "low",
+      "current-state": "exports-6-sub-components-identical-by-construction-classes-and-cva-copied-from-workspace",
+      "per-check": {
+        "export-list-showcase-vs-consumer": "strict-pass",
+        "class-strings-showcase-vs-consumer": "strict-pass",
+        "emptyMediaVariants-shape-showcase-vs-consumer": "strict-pass",
+        "showcase-imports-from-workspace": "loose-pass"
+      },
+      "allowed-divergences": {
+        "import-path-showcase-vs-consumer": {
+          "showcase": "@workspace/ui/components/empty",
+          "consumer": "@/lib/utils + class-variance-authority"
+        }
+      }
+    },
+    "ds-tabs": {
+      "showcase-category": "shim",
+      "consumer-path": "registry/base-nova/ds-tabs/ds-tabs.tsx",
+      "showcase-path": "packages/registry/src/components/tabs/index.tsx",
+      "workspace-source-path": "packages/ui/src/components/tabs.tsx",
+      "drift-axes": ["showcase-vs-consumer-exports", "consumer-vs-workspace"],
+      "behavioral-divergence-risk": "medium",
+      "current-state": "exports-4-sub-components-identical-by-construction-base-ui-tabs-inlined",
+      "per-check": {
+        "export-list-showcase-vs-consumer": "strict-pass",
+        "class-strings-showcase-vs-consumer": "strict-pass",
+        "tabsListVariants-shape-showcase-vs-consumer": "strict-pass",
+        "showcase-imports-from-workspace": "loose-pass"
+      },
+      "allowed-divergences": {
+        "import-path-showcase-vs-consumer": {
+          "showcase": "@workspace/ui/components/tabs",
+          "consumer": "@/lib/utils + @base-ui/react/tabs + class-variance-authority"
+        }
+      }
+    },
+    "ds-input": {
+      "showcase-category": "shim",
+      "consumer-path": "registry/base-nova/ds-input/ds-input.tsx",
+      "showcase-path": "packages/registry/src/components/input/index.tsx",
+      "workspace-source-path": null,
+      "drift-axes": ["showcase-vs-consumer-styling"],
+      "behavioral-divergence-risk": "low",
+      "current-state": "real-component-class-strings-identical-by-construction",
+      "per-check": {
+        "class-strings-showcase-vs-consumer": "strict-pass",
+        "export-name-showcase-vs-consumer": "strict-pass"
+      },
+      "allowed-divergences": {
+        "import-path-showcase-vs-consumer": {
+          "showcase": "@workspace/ui/lib/utils",
+          "consumer": "@/lib/utils"
+        }
+      }
+    },
+    "ds-textarea": {
+      "showcase-category": "shim",
+      "consumer-path": "registry/base-nova/ds-textarea/ds-textarea.tsx",
+      "showcase-path": "packages/registry/src/components/textarea/index.tsx",
+      "workspace-source-path": null,
+      "drift-axes": ["showcase-vs-consumer-styling"],
+      "behavioral-divergence-risk": "low",
+      "current-state": "real-component-class-strings-identical-by-construction",
+      "per-check": {
+        "class-strings-showcase-vs-consumer": "strict-pass",
+        "export-name-showcase-vs-consumer": "strict-pass"
+      },
+      "allowed-divergences": {
+        "import-path-showcase-vs-consumer": {
+          "showcase": "@workspace/ui/lib/utils",
+          "consumer": "@/lib/utils"
+        }
+      }
     }
   }
 }
