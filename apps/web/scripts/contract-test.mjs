@@ -9,6 +9,7 @@ import { spawnSync } from "node:child_process"
 import {
   cpSync,
   mkdirSync,
+  readFileSync,
   rmSync,
   writeFileSync,
 } from "node:fs"
@@ -18,6 +19,7 @@ import { fileURLToPath } from "node:url"
 const HERE = dirname(fileURLToPath(import.meta.url))
 const REPO_ROOT = join(HERE, "..", "..", "..")
 const SOURCE_DIR = join(REPO_ROOT, "registry", "base-nova")
+const REGISTRY_JSON = join(REPO_ROOT, "registry.json")
 const SHIM = join(REPO_ROOT, ".contract-test")
 
 rmSync(SHIM, { recursive: true, force: true })
@@ -40,8 +42,30 @@ writeFileSync(
   ].join("\n")
 )
 
-// Mirror registry sources into the consumer's @/components/ui.
-cpSync(SOURCE_DIR, join(SHIM, "components", "ui"), { recursive: true })
+// Mirror registry sources into the consumer's @/components/ui. We honor each
+// item's `target` field from registry.json — the same renaming the shadcn CLI
+// applies at install time — so blocks that import other ds-* components
+// resolve correctly (`@/components/ui/ds-empty` → `components/ui/ds-empty.tsx`,
+// not `components/ui/ds-empty/ds-empty.tsx`).
+const catalog = JSON.parse(readFileSync(REGISTRY_JSON, "utf-8"))
+
+function resolveTarget(target) {
+  return target
+    .replace(/^@ui\//, "components/ui/")
+    .replace(/^@components\//, "components/")
+    .replace(/^@lib\//, "lib/")
+    .replace(/^@hooks\//, "hooks/")
+    .replace(/^@\//, "./")
+}
+
+for (const item of catalog.items ?? []) {
+  for (const file of item.files ?? []) {
+    const sourcePath = join(REPO_ROOT, file.path)
+    const destPath = join(SHIM, resolveTarget(file.target))
+    mkdirSync(dirname(destPath), { recursive: true })
+    cpSync(sourcePath, destPath)
+  }
+}
 
 writeFileSync(
   join(SHIM, "tsconfig.json"),

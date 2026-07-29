@@ -177,6 +177,26 @@
           "consumer": "@/lib/utils"
         }
       }
+    },
+    "ds-block-empty-state": {
+      "showcase-category": "block",
+      "consumer-path": "registry/base-nova/ds-block-empty-state/ds-block-empty-state.tsx",
+      "showcase-path": "packages/registry/src/blocks/empty-state/index.tsx",
+      "workspace-source-path": null,
+      "drift-axes": ["showcase-vs-consumer-composition"],
+      "behavioral-divergence-risk": "low",
+      "current-state": "block-composes-ds-empty-button-colored-badge-class-strings-identical-by-construction",
+      "per-check": {
+        "class-strings-showcase-vs-consumer": "strict-pass",
+        "export-name-showcase-vs-consumer": "strict-pass",
+        "composed-imports-showcase-vs-consumer": "strict-pass"
+      },
+      "allowed-divergences": {
+        "import-path-showcase-vs-consumer": {
+          "showcase": "@workspace/ui/components/empty + @workspace/ui/components/button + @workspace/registry/components/colored-badge",
+          "consumer": "@/components/ui/ds-empty + @/components/ui/ds-button + @/components/ui/ds-colored-badge + @/lib/utils"
+        }
+      }
     }
   }
 }

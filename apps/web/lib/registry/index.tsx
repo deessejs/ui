@@ -38,6 +38,8 @@ import {
   TextareaDemo,
 } from "@workspace/registry/components/textarea"
 import { meta as textareaMeta } from "@workspace/registry/components/textarea/meta"
+import { EmptyState } from "@workspace/registry/blocks/empty-state"
+import { meta as emptyStateMeta } from "@workspace/registry/blocks/empty-state/meta"
 
 import { SOURCES } from "./sources"
 import type { ComponentMeta, BlockMeta } from "./types"
@@ -107,7 +109,13 @@ const COMPONENT_REGISTRY: ComponentEntry[] = [
   },
 ]
 
-const BLOCK_REGISTRY: BlockEntry[] = []
+const BLOCK_REGISTRY: BlockEntry[] = [
+  {
+    ...emptyStateMeta,
+    Block: EmptyState,
+    source: SOURCES.blocks["empty-state"],
+  },
+]
 
 const CATEGORY_LABELS: Record<string, string> = {
   buttons: "Buttons",
