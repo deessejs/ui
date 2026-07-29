@@ -5,11 +5,11 @@
 //
 // Run by the `contract` job in .github/workflows/ci.yml.
 
+import { spawnSync } from "node:child_process"
 import {
   cpSync,
   mkdirSync,
   rmSync,
-  spawnSync,
   writeFileSync,
 } from "node:fs"
 import { dirname, join } from "node:path"

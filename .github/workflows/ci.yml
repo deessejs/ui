@@ -59,7 +59,10 @@ jobs:
       - run: npm ci
       - run: npx turbo lint
 
-  # TypeScript across the workspace (packages + apps/web).
+  # TypeScript across the workspace (packages + apps/web). apps/web imports
+  # from @workspace/registry, which only resolves to types after the registry
+  # package's `build` script has emitted dist/. So typecheck depends on the
+  # registry package being built first.
   typecheck:
     name: Typecheck
     runs-on: ubuntu-latest
@@ -70,6 +73,8 @@ jobs:
           node-version: "20"
           cache: npm
       - run: npm ci
+      - name: Build @workspace/registry (so apps/web can resolve its imports)
+        run: npm run build -w @workspace/registry
       - run: npx turbo typecheck
 
   # Full build, including the showcase site (apps/web) which references the
