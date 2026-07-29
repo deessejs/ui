@@ -33,4 +33,8 @@ jobs:
           test -f apps/web/public/r/ds-colored-badge.json
 
       - name: Registry validate (shadcn CLI)
-        run: npx --yes shadcn@latest registry validate deessejs/ui
+        # Default to main resolves against the upstream default branch, which
+        # doesn't yet have registry.json. Pin the validate to the PR head ref
+        # so it reads the registry.json on the branch under test. The shadcn
+        # CLI accepts the `#ref` form for branch / tag / SHA.
+        run: npx --yes shadcn@latest registry validate "deessejs/ui#${{ github.event.pull_request.head.ref || github.ref_name }}"
