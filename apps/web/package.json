@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/build-sources.mjs",
+    "registry:build": "node scripts/build-registry.mjs",
+    "prebuild": "node scripts/build-sources.mjs && node scripts/build-registry.mjs",
     "build": "npm run build -w @workspace/registry && next build",
     "start": "next start",
     "lint": "eslint",
