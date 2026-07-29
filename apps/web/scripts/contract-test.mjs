@@ -86,7 +86,6 @@ const install = spawnSync(
   [
     "install",
     "--save-exact",
-    "--silent",
     "react@^19",
     "react-dom@^19",
     "@types/react@^19",
@@ -97,19 +96,26 @@ const install = spawnSync(
     "tailwind-merge",
     "typescript@^5",
   ],
-  { cwd: SHIM, stdio: "inherit" }
+  { cwd: SHIM, stdio: "pipe", shell: true }
 )
+if (install.stdout) process.stdout.write(install.stdout)
+if (install.stderr) process.stderr.write(install.stderr)
 if (install.status !== 0) {
-  console.error("[contract-test] npm install failed")
+  console.error(`[contract-test] npm install failed (status ${install.status}, signal ${install.signal})`)
+  if (install.error) console.error(`[contract-test] error: ${install.error.stack || install.error.message}`)
   process.exit(install.status ?? 1)
 }
 
 const tsc = spawnSync("npx", ["tsc", "--noEmit"], {
   cwd: SHIM,
-  stdio: "inherit",
+  stdio: "pipe",
+  shell: true,
 })
+if (tsc.stdout) process.stdout.write(tsc.stdout)
+if (tsc.stderr) process.stderr.write(tsc.stderr)
 if (tsc.status !== 0) {
-  console.error("[contract-test] tsc failed")
+  console.error(`[contract-test] tsc failed (status ${tsc.status}, signal ${tsc.signal})`)
+  if (tsc.error) console.error(`[contract-test] error: ${tsc.error.stack || tsc.error.message}`)
   process.exit(tsc.status ?? 1)
 }
 
