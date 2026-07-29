@@ -50,6 +50,34 @@
 - **Themable by tokens.** Every color, every gap follows the design system. No raw palette utilities escape into the registry.
 - **Designed for AI agents.** Components are real, discoverable, and copyable — no abstractions to fight through.
 
+## Install
+
+Any developer can copy a component into their own shadcn project:
+
+```sh
+# GitHub registry (no setup, reads from this public repo)
+npx shadcn@latest add deessejs/ui/ds-button
+
+# URL (works against the deployed showcase site)
+npx shadcn@latest add https://ui.deessejs.com/r/ds-button.json
+
+# Namespace (one-time setup, then any item by short name)
+npx shadcn@latest registry add @deessejs=https://ui.deessejs.com/r/{name}.json
+npx shadcn@latest add @deessejs/ds-button
+```
+
+All three commands land the same `ds-button.tsx` in the consumer's `components/ui/`, with peer dependencies installed automatically.
+
+## Available components
+
+| Component | Type | Description |
+| --- | --- | --- |
+| `ds-button` | `registry:ui` | Button primitive — Base UI on shadcn `base-nova` tokens, with variant and size styles. |
+| `ds-icon-button` | `registry:ui` | Icon-only button — `sm` / `md` / `lg` size variants, requires `aria-label`. |
+| `ds-colored-badge` | `registry:ui` | Inline badge with semantic color variants. Self-contained — no Base UI dependency. |
+
+Each item declares its npm peer dependencies in `registry.json`. Browse the catalog at `https://ui.deessejs.com` or the full index at `/r/registry.json`. See [Adding a component](https://github.com/deessejs/ui/blob/main/registry/CONTRIBUTING.md) to publish your own.
+
 ## Adding a component
 
 1. Create `packages/registry/src/components/<id>/` with two files:
@@ -70,16 +98,24 @@
 ```
 .
 ├── apps/
-│   └── web/                Next.js 16 showcase site
+│   └── web/                Next.js 16 showcase site (serves /r/* registry JSON)
+│       ├── scripts/build-registry.mjs   Emits items to public/r/
+│       └── public/r/                    Generated registry JSON (committed)
 ├── packages/
 │   ├── registry/           @workspace/registry — the deessejs component library
 │   │   └── src/components/  One folder per component (index.tsx + meta.ts)
 │   ├── ui/                 @workspace/ui — shadcn primitives (Base UI)
 │   ├── eslint-config/      Shared ESLint config
 │   └── typescript-config/  Shared TypeScript configs
+├── registry/
+│   └── base-nova/          Hand-curated consumer-facing sources (ships to users)
+│       └── ds-button/      One folder per distributable item
+├── registry.json           Catalog at repo root (read by the GitHub registry CLI)
 ├── docs/
 │   ├── product/            This README lives here
-│   └── learnings/          Design research (anti-slop thesis)
+│   ├── learnings/          Design research (anti-slop thesis)
+│   └── plans/              Implementation plans
+├── .github/workflows/ci.yml         Registry validate + lint + typecheck + build
 ├── turbo.json              Monorepo task graph
 └── package.json            Workspaces: apps/*, packages/*
 ```
@@ -94,6 +130,8 @@
 ## Contributing
 
 Open an issue to discuss larger changes. For typos, broken links, and small fixes, PRs are welcome.
+
+To add a new component to the registry, follow [`registry/CONTRIBUTING.md`](./registry/CONTRIBUTING.md) — it covers file layout, `registry.json` schema, the build pipeline, and the local validation loop.
 
 ## License
 

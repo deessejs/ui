@@ -5,15 +5,22 @@ on:
     branches: [main]
   pull_request:
 
+# Auto-cancel in-progress runs on the same ref.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  validate:
-    name: Validate registry
+  # Validates the catalog against the official shadcn schema and asserts the
+  # JSON artifacts the build script emits are present on disk.
+  registry-validate:
+    name: Registry validate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "20"
           cache: npm
@@ -33,8 +40,73 @@ jobs:
           test -f apps/web/public/r/ds-colored-badge.json
 
       - name: Registry validate (shadcn CLI)
-        # Default to main resolves against the upstream default branch, which
-        # doesn't yet have registry.json. Pin the validate to the PR head ref
-        # so it reads the registry.json on the branch under test. The shadcn
-        # CLI accepts the `#ref` form for branch / tag / SHA.
+        # Default "deessejs/ui" resolves against the upstream default branch,
+        # which doesn't yet have registry.json. Pin the validate to the PR head
+        # ref so it reads the registry.json on the branch under test. The
+        # shadcn CLI accepts the `#ref` form for branch / tag / SHA.
         run: npx --yes shadcn@latest registry validate "deessejs/ui#${{ github.event.pull_request.head.ref || github.ref_name }}"
+
+  # Workspace-wide ESLint.
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npx turbo lint
+
+  # TypeScript across the workspace (packages + apps/web). apps/web imports
+  # from @workspace/registry, which only resolves to types after the registry
+  # package's `build` script has emitted dist/. So typecheck depends on the
+  # registry package being built first.
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - name: Build @workspace/registry (so apps/web can resolve its imports)
+        run: npm run build -w @workspace/registry
+      - run: npx turbo typecheck
+
+  # Full build, including the showcase site (apps/web) which references the
+  # workspace @workspace/registry package. This is the job that catches
+  # "registry changes broke the showcase" regressions — the registry package
+  # must build, and apps/web must consume it successfully.
+  build-showcase:
+    name: Build showcase
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npx turbo build
+      - name: Assert showcase output exists
+        run: test -d apps/web/.next
+
+  # Phase 4 contract test. Builds a stub consumer project that mirrors a
+  # typical shadcn install (with a real `cn` helper at `@/lib/utils`) and
+  # type-checks the registry sources against it. Catches typos in imports,
+  # wrong peer deps, and alias drift that would otherwise only surface when
+  # an actual user runs `npx shadcn add`.
+  contract:
+    name: Contract test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+          cache: npm
+      - run: node apps/web/scripts/contract-test.mjs

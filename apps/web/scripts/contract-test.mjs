@@ -1,0 +1,117 @@
+// Phase 4 contract test: type-checks the consumer-facing registry sources in a
+// stub consumer project that mirrors a typical shadcn install environment.
+// Catches regressions where a ds-<id>.tsx would not compile in a real
+// consumer's project (typos in `cn` imports, wrong peer deps, alias drift).
+//
+// Run by the `contract` job in .github/workflows/ci.yml.
+
+import { spawnSync } from "node:child_process"
+import {
+  cpSync,
+  mkdirSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs"
+import { dirname, join } from "node:path"
+import { fileURLToPath } from "node:url"
+
+const HERE = dirname(fileURLToPath(import.meta.url))
+const REPO_ROOT = join(HERE, "..", "..", "..")
+const SOURCE_DIR = join(REPO_ROOT, "registry", "base-nova")
+const SHIM = join(REPO_ROOT, ".contract-test")
+
+rmSync(SHIM, { recursive: true, force: true })
+mkdirSync(join(SHIM, "components", "ui"), { recursive: true })
+mkdirSync(join(SHIM, "lib"), { recursive: true })
+
+// `cn` shim — mirrors what `shadcn init` writes at `lib/utils.ts` in a consumer
+// project. This is the only file the contract test authores against the real
+// `cn` semantics; nothing else gets fabricated.
+writeFileSync(
+  join(SHIM, "lib", "utils.ts"),
+  [
+    'import { clsx, type ClassValue } from "clsx"',
+    'import { twMerge } from "tailwind-merge"',
+    "",
+    "export function cn(...inputs: ClassValue[]) {",
+    "  return twMerge(clsx(inputs))",
+    "}",
+    "",
+  ].join("\n")
+)
+
+// Mirror registry sources into the consumer's @/components/ui.
+cpSync(SOURCE_DIR, join(SHIM, "components", "ui"), { recursive: true })
+
+writeFileSync(
+  join(SHIM, "tsconfig.json"),
+  JSON.stringify(
+    {
+      compilerOptions: {
+        strict: true,
+        target: "ES2022",
+        module: "esnext",
+        moduleResolution: "bundler",
+        jsx: "preserve",
+        lib: ["dom", "es2022"],
+        noEmit: true,
+        paths: { "@/*": ["./*"] },
+        skipLibCheck: true,
+      },
+      include: ["lib/**/*.ts", "components/**/*.tsx"],
+    },
+    null,
+    2
+  )
+)
+
+writeFileSync(
+  join(SHIM, "package.json"),
+  JSON.stringify(
+    {
+      name: "registry-contract-test",
+      version: "0.0.0",
+      private: true,
+      type: "module",
+    },
+    null,
+    2
+  )
+)
+
+console.log(`[contract-test] shim project at ${SHIM}`)
+
+const install = spawnSync(
+  "npm",
+  [
+    "install",
+    "--save-exact",
+    "--silent",
+    "react@^19",
+    "react-dom@^19",
+    "@types/react@^19",
+    "@types/react-dom@^19",
+    "@base-ui/react@^1.6.0",
+    "class-variance-authority",
+    "clsx",
+    "tailwind-merge",
+    "typescript@^5",
+  ],
+  { cwd: SHIM, stdio: "inherit" }
+)
+if (install.status !== 0) {
+  console.error("[contract-test] npm install failed")
+  process.exit(install.status ?? 1)
+}
+
+const tsc = spawnSync("npx", ["tsc", "--noEmit"], {
+  cwd: SHIM,
+  stdio: "inherit",
+})
+if (tsc.status !== 0) {
+  console.error("[contract-test] tsc failed")
+  process.exit(tsc.status ?? 1)
+}
+
+console.log("[contract-test] OK")
+rmSync(SHIM, { recursive: true, force: true })
