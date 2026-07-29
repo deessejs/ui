@@ -1,8 +1,9 @@
 {
   "$schema": "./audit-schema-not-yet-defined.json",
-  "audit-version": "2026-07-29",
+  "audit-version": "2026-07-29-b",
   "audit-source": "manual-inspection-of-files",
   "tolerance-policy-ref": "../plans/2026-07-29-drift-detection.md",
+  "last-revised": "2026-07-29 — post PR #3 merge: ds-colored-badge divergence fix (d90b7d9) + bg-blue-600 shade bump (e2e47a4) reflected here",
   "items": {
     "ds-button": {
       "showcase-category": "shim",
@@ -58,19 +59,24 @@
         "consumer-vs-workspace-styling"
       ],
       "behavioral-divergence-risk": "high",
-      "current-state": "color-classes-identical-but-base-element-and-shape-differ",
-      "concrete-divergence-observed": true,
+      "current-state": "color-classes-identical-after-d90b7d9+e2e47a4-base-classes-inlined-to-match",
+      "concrete-divergence-observed": false,
+      "concrete-divergence-resolved-by": [
+        "d90b7d9 — consumer inlined workspace Badge class strings (BADGE_BASE + BADGE_OUTLINE constants) so the consumer's raw <span> renders visually equivalent to the showcase's Badge primitive + variant=outline wrap",
+        "e2e47a4 — bumped 'blue' shade from bg-blue-500 to bg-blue-600 across both trees (manual align)"
+      ],
       "divergence-detail": {
         "showcase-renders": "Badge(variant=outline) + color overlay -> pill shape (rounded-4xl, h-5), focus ring present",
-        "consumer-renders": "raw <span> + color overlay -> rounded-md, px-2.5 py-0.5, no focus ring",
-        "color-map-showcase-vs-consumer": "identical (8 keys, identical class strings)"
+        "consumer-renders": "raw <span> with BADGE_BASE+OUTLINE+COLOR_CLASSES class strings -> equivalent visual classes to the showcase",
+        "color-map-showcase-vs-consumer": "identical (8 keys, identical class strings, blue=bg-blue-600/10, others=bg-{color}-500/10)",
+        "base-element-showcase-vs-consumer": "still different element (Badge vs span) but visually equivalent via inlined class strings"
       },
       "per-check": {
         "color-map-showcase-vs-consumer": "strict-pass",
-        "base-element-showcase-vs-consumer": "FAIL — showcase=Badge primitive, consumer=<span>",
-        "shape-showcase-vs-consumer": "FAIL — showcase=rounded-4xl+h-5, consumer=rounded-md+inline-flex"
+        "base-class-strings-showcase-vs-consumer": "structural-pass-via-inline",
+        "shape-showcase-vs-consumer": "equivalent-via-inline"
       },
-      "recommended-fix": "make-ds-colored-badge-match-the-showcase-rendering-or-flip-the-direction-of-collapse-so-showcase-renders-the-consumer"
+      "recommended-fix": "n/a — current state ships in v1.1; if workspace Badge primitive updates, d90b7d9 comment notes this string must be re-pasted. Drift script will catch silent drift if either side moves."
     }
   }
 }

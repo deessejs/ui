@@ -71,6 +71,29 @@ These come from decisions documented in [`docs/plans/2026-07-29-shadcn-registry-
    ```
 
    Then run `tsc --noEmit` from `apps/web/` to ensure the showcase site still compiles.
+7. **Update `docs/registry/audit-<date>.json`.** The CI `drift` job reads this file for per-item paths and classification (`showcase-shim` vs `showcase-structural`). Without an entry for your new item, the job exits non-zero with `no audit entry for X`. Minimum fields per item:
+
+   ```json
+   {
+     "items": {
+       "ds-<id>": {
+         "showcase-category": "shim",
+         "consumer-path": "registry/base-nova/ds-<id>/ds-<id>.tsx",
+         "showcase-path": "packages/registry/src/components/<id>/index.tsx",
+         "workspace-source-path": "packages/ui/src/components/<id>.tsx"
+       }
+     }
+   }
+   ```
+
+   `workspace-source-path` is `null` if the workspace does not implement the component independently. If the drift checks in `apps/web/scripts/check-registry-drift.mjs` don't cover your item's structure yet, extend the script with a per-item check — the script fails closed for un-audited items rather than silently skipping them.
+8. **Run the drift script locally** to confirm the new item's two trees are aligned:
+
+   ```sh
+   node apps/web/scripts/check-registry-drift.mjs
+   ```
+
+   If the script flags drift between your new item and its showcase counterpart, fix one side before pushing — drift between what the showcase displays and what consumers install is the user-facing bug this script exists to prevent.
 
 ## Adding a block (later)
 
@@ -104,8 +127,8 @@ npm run registry:build --workspace web
 # Validate the catalog against the shadcn schema
 npx --yes shadcn@latest registry validate "deessejs/ui#$(git branch --show-current)"
 
-# Type-check the showcase site
-cd apps/web && npx tsc --noEmit
+# Run the drift-detection script against the consumer and showcase trees
+node apps/web/scripts/check-registry-drift.mjs
 ```
 
-CI runs all three on every push and PR.
+CI runs all three on every push and PR (alongside lint, typecheck, the Phase 4 contract test, and a full build-showcase job).
