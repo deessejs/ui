@@ -1,0 +1,18 @@
+{
+  "name": "ds-textarea",
+  "type": "registry:ui",
+  "title": "Textarea",
+  "description": "DeesseJS multi-line textarea with token-driven borders, focus ring, aria-invalid styling. Self-contained — no Base UI dependency.",
+  "dependencies": [
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "registry/base-nova/ds-textarea/ds-textarea.tsx",
+      "type": "registry:ui",
+      "target": "@ui/ds-textarea.tsx",
+      "content": "import * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\n\nexport interface DsTextareaProps\n  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}\n\nexport const DsTextarea = React.forwardRef<\n  HTMLTextAreaElement,\n  DsTextareaProps\n>(({ className, ...props }, ref) => (\n  <textarea\n    ref={ref}\n    data-slot=\"textarea\"\n    className={cn(\n      \"border-input bg-transparent text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 flex field-sizing-content min-h-16 w-full min-w-0 rounded-lg border px-2.5 py-2 text-sm transition-colors outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20\",\n      className\n    )}\n    {...props}\n  />\n))\nDsTextarea.displayName = \"DsTextarea\"\n\nexport { DsTextarea }\n"
+    }
+  ]
+}

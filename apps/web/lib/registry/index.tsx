@@ -13,6 +13,31 @@ import {
   IconButtonDemo,
 } from "@workspace/registry/components/icon-button"
 import { meta as iconButtonMeta } from "@workspace/registry/components/icon-button/meta"
+import {
+  Breadcrumb,
+  BreadcrumbDemo,
+} from "@workspace/registry/components/breadcrumb"
+import { meta as breadcrumbMeta } from "@workspace/registry/components/breadcrumb/meta"
+import {
+  Empty,
+  EmptyDemo,
+} from "@workspace/registry/components/empty"
+import { meta as emptyMeta } from "@workspace/registry/components/empty/meta"
+import {
+  Tabs,
+  TabsDemo,
+} from "@workspace/registry/components/tabs"
+import { meta as tabsMeta } from "@workspace/registry/components/tabs/meta"
+import {
+  Input,
+  InputDemo,
+} from "@workspace/registry/components/input"
+import { meta as inputMeta } from "@workspace/registry/components/input/meta"
+import {
+  Textarea,
+  TextareaDemo,
+} from "@workspace/registry/components/textarea"
+import { meta as textareaMeta } from "@workspace/registry/components/textarea/meta"
 
 import { SOURCES } from "./sources"
 import type { ComponentMeta, BlockMeta } from "./types"
@@ -49,6 +74,36 @@ const COMPONENT_REGISTRY: ComponentEntry[] = [
     Component: IconButton,
     Demo: IconButtonDemo,
     source: SOURCES.components["icon-button"],
+  },
+  {
+    ...breadcrumbMeta,
+    Component: Breadcrumb,
+    Demo: BreadcrumbDemo,
+    source: SOURCES.components.breadcrumb,
+  },
+  {
+    ...emptyMeta,
+    Component: Empty,
+    Demo: EmptyDemo,
+    source: SOURCES.components.empty,
+  },
+  {
+    ...tabsMeta,
+    Component: Tabs,
+    Demo: TabsDemo,
+    source: SOURCES.components.tabs,
+  },
+  {
+    ...inputMeta,
+    Component: Input,
+    Demo: InputDemo,
+    source: SOURCES.components.input,
+  },
+  {
+    ...textareaMeta,
+    Component: Textarea,
+    Demo: TextareaDemo,
+    source: SOURCES.components.textarea,
   },
 ]
 

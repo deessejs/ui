@@ -1,0 +1,18 @@
+{
+  "name": "ds-input",
+  "type": "registry:ui",
+  "title": "Input",
+  "description": "DeesseJS single-line text input with token-driven borders, focus ring, aria-invalid styling. Self-contained — no Base UI dependency.",
+  "dependencies": [
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "registry/base-nova/ds-input/ds-input.tsx",
+      "type": "registry:ui",
+      "target": "@ui/ds-input.tsx",
+      "content": "import * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\n\nexport interface DsInputProps\n  extends React.InputHTMLAttributes<HTMLInputElement> {}\n\nexport const DsInput = React.forwardRef<HTMLInputElement, DsInputProps>(\n  ({ className, type, ...props }, ref) => (\n    <input\n      type={type}\n      ref={ref}\n      data-slot=\"input\"\n      className={cn(\n        \"border-input bg-transparent text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 flex h-8 w-full min-w-0 rounded-lg border px-2.5 py-1 text-sm transition-colors outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground\",\n        className\n      )}\n      {...props}\n    />\n  )\n)\nDsInput.displayName = \"DsInput\"\n\nexport { DsInput }\n"
+    }
+  ]
+}
