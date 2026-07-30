@@ -143,12 +143,7 @@ export default async function Page({ params }: { params: Params }) {
                   </span>
                 </div>
                 <div className="flex flex-1 items-center justify-center p-12">
-                  <div className="text-muted-foreground flex flex-col items-center gap-2 font-mono text-xs">
-                    <span className="text-foreground text-sm font-medium">
-                      {block.name}
-                    </span>
-                    <span>rendered block placeholder</span>
-                  </div>
+                  <block.Demo />
                 </div>
               </div>
             </TabsContent>

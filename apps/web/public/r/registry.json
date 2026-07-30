@@ -147,6 +147,28 @@
           "target": "@ui/ds-textarea.tsx"
         }
       ]
+    },
+    {
+      "name": "ds-block-empty-state",
+      "type": "registry:block",
+      "title": "Empty State",
+      "description": "DeesseJS composable empty-state block — bundles ds-empty + ds-button + ds-colored-badge. Optional icon, status badge, description, and CTA. First block, single-file, validates the registry:block pipeline.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "ds-empty",
+        "ds-button",
+        "ds-colored-badge"
+      ],
+      "files": [
+        {
+          "path": "registry/base-nova/ds-block-empty-state/ds-block-empty-state.tsx",
+          "type": "registry:component",
+          "target": "@/components/empty-state.tsx"
+        }
+      ]
     }
   ]
 }

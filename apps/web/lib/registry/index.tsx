@@ -38,6 +38,11 @@ import {
   TextareaDemo,
 } from "@workspace/registry/components/textarea"
 import { meta as textareaMeta } from "@workspace/registry/components/textarea/meta"
+import {
+  EmptyState,
+  EmptyStateBlockDemo,
+} from "@workspace/registry/blocks/empty-state"
+import { meta as emptyStateMeta } from "@workspace/registry/blocks/empty-state/meta"
 
 import { SOURCES } from "./sources"
 import type { ComponentMeta, BlockMeta } from "./types"
@@ -53,6 +58,8 @@ type ComponentEntry = ComponentMeta & {
 type BlockEntry = BlockMeta & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Block: React.ComponentType<any>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Demo: React.ComponentType<any>
   source: string
 }
 
@@ -107,7 +114,14 @@ const COMPONENT_REGISTRY: ComponentEntry[] = [
   },
 ]
 
-const BLOCK_REGISTRY: BlockEntry[] = []
+const BLOCK_REGISTRY: BlockEntry[] = [
+  {
+    ...emptyStateMeta,
+    Block: EmptyState,
+    Demo: EmptyStateBlockDemo,
+    source: SOURCES.blocks["empty-state"],
+  },
+]
 
 const CATEGORY_LABELS: Record<string, string> = {
   buttons: "Buttons",
@@ -196,8 +210,8 @@ function deriveComponentPreview(items: ComponentEntry[]): React.ComponentType {
 
 function deriveBlockPreview(items: BlockEntry[]): React.ComponentType {
   const First = items[0]!
-  const Block = First.Block
-  return () => <Block />
+  const Demo = First.Demo
+  return () => <Demo />
 }
 
 export function getEnrichedComponentCategories(): EnrichedComponentCategory[] {
