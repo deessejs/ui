@@ -102,7 +102,7 @@ export default async function Page({ params }: { params: Params }) {
                   href={`/blocks/${category_id}/${item.id}`}
                   name={item.name}
                   description={item.description}
-                  preview={<item.Block />}
+                  preview={<item.Demo />}
                   className={spansTwo ? "sm:col-span-2" : undefined}
                   previewClassName={spansTwo ? "sm:h-60" : undefined}
                 />
