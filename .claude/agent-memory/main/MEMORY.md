@@ -5,3 +5,4 @@
 - [Registry deps coupling](feedback_registry_deps_coupling.md) — new registry item with new peer dep requires updating contract-test.mjs install list in lockstep
 - [Design learnings repo](project_design_learnings.md) — knowledge base + working monorepo for deessejs/ui registry at ui.deessejs.com (hosted on Vercel)
 - [Phase 4 validated](project_phase4_validated.md) — external install end-to-end confirmed 2026-07-29; Phase 6 (official shadcn index submission) gate is now lifted
+- [Studio decisions](project_studio_decisions.md) — 9 locked decisions (2026-07-30): agents author into a DB, PR publishing, dual tree collapsed

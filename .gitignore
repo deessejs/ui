@@ -12,8 +12,11 @@ node_modules
 
 # testing
 coverage
-.contract-test/  # ephemeral shim project created by apps/web/scripts/contract-test.mjs
+# ephemeral shim project created by apps/web/scripts/contract-test.mjs
+.contract-test/
 temp/sandbox-validate
+# vendored reference checkout, has its own .git — never commit
+temp/saas-template
 
 # next.js
 .next/

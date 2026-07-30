@@ -353,3 +353,127 @@ The deferred items from the **Phase 7** section (multi-style, multi-base, blocks
 - **Buggy monorepo surface in the shadcn CLI.** Multiple open 2026 bugs (#9239, #11002, related). Mitigation: authored consumer sources ship as-is — no runtime transform of workspace imports. The decoupling is the defense.
 - **Drift between `packages/registry/src/components/<id>/index.tsx` (showcase) and `registry/base-nova/ds-<id>/ds-<id>.tsx` (registry).** Mitigation: drift-check script added if drift shows up in Phase 5.
 - **Schema evolution.** The `registry.json` schema may grow new required fields. The validator in Phase 5 catches drift per CI run.
+
+---
+
+# Addendum — 2026-07-30: the dual-tree decision is reopened and reversed
+
+**Status of this addendum:** supersedes the "Existing showcase tree" entry in the decisions log
+above. Everything else in this plan stands.
+
+## What was locked
+
+From the decisions log (2026-07-29):
+
+> **Existing showcase tree:** `packages/registry/src/components/<id>/` and its `meta.ts` files stay
+> untouched. […] `registry.json` is a parallel manifest for the shadcn CLI. **Duplication is
+> accepted; drift is caught by PR review.**
+
+And from the Risks section:
+
+> **Drift between `packages/registry/src/components/<id>/index.tsx` (showcase) and
+> `registry/base-nova/ds-<id>/ds-<id>.tsx` (registry).** Mitigation: drift-check script added if
+> drift shows up in Phase 5.
+
+That mitigation shipped: `apps/web/scripts/check-registry-drift.mjs`, `docs/registry/audit-2026-07-29.json`,
+and the CI `drift` job.
+
+## What materially changed
+
+The decisions log opens with *"no more re-litigation unless something materially changes the
+picture."* Two things did:
+
+1. **Components are now authored by AI agents writing to an API, not by humans writing files.**
+   See `docs/reports/2026-07-30-draft-preview-admin-architecture.md`.
+2. **PR review is no longer in the authoring loop.** The locked decision's stated mitigation —
+   *"drift is caught by PR review"* — no longer has a PR to run in. Its premise is gone, not merely
+   inconvenient.
+
+Duplication was acceptable when a human read both files before merge. With an agent writing both,
+it doubles the surface where generated code can diverge silently, and the only remaining detector is
+a script whose per-item assertions are hardcoded to three item names.
+
+## What the divergence actually was
+
+Measured on 2026-07-30 by reading all three files:
+
+| File | Content |
+|---|---|
+| `packages/ui/src/components/button.tsx` | Full `cva`; `cn` from `@workspace/ui/lib/utils`; exports `Button` / `buttonVariants` |
+| `registry/base-nova/ds-button/ds-button.tsx` | **Identical `cva` body**; `cn` from `@/lib/utils`; exports `DsButton` / `dsButtonVariants` |
+| `packages/registry/src/components/button/index.tsx` | Three-line re-export of the workspace Button, plus `ButtonDemo` |
+
+The `cva` bodies are byte-equivalent — same 607-character base string, same six variants, same eight
+sizes. The differences are the `cn` import specifier, the export names, defaults expressed by
+destructuring vs `defaultVariants`, and a named `DsButtonProps` interface on the consumer side. **For
+`ds-button` there is no design divergence.**
+
+**`ds-button` is not representative.** Reading all nine items on 2026-07-30 rather than only the three
+above: four are thin re-exports (`button`, `breadcrumb`, `tabs`, `empty`) and **five carry real
+implementation** (`colored-badge`, `icon-button`, `input`, `textarea`, `blocks/empty-state`). For
+`input`, `textarea`, `colored-badge` and `icon-button` there is no `packages/ui` primitive to re-export
+at all — `packages/ui/src/components/` holds only five files.
+
+Two items genuinely diverge, and in both the consumer copy is the degraded one: `ds-icon-button` inlines
+a **strict subset** of the button base string (missing `group/button`, `text-sm`, the active translate,
+every `aria-invalid:*` and every `[&_svg]` rule), and `ds-colored-badge` inlines a stale `Badge` snapshot
+while widening its props type with `className`.
+
+The drift apparatus caught neither, because its per-item assertions are hardcoded to three names while
+three other items get zero assertions and the run still reports green. That — not the absence of
+divergence — is the argument for deleting it.
+
+## The new decision
+
+**The two trees collapse into one.** The self-contained, consumer-facing source becomes the single
+source of truth. The showcase imports it rather than maintaining a parallel version.
+
+Arbitration is **per item**, not blanket:
+
+- The consumer copy wins for `button`, `breadcrumb`, `tabs`, `empty`, `input`, `textarea` and
+  `blocks/empty-state`. It is the artifact that actually ships, that `contract-test.mjs` type-checks, and
+  that the Phase 4 sandbox validated end-to-end against the deployed registry on 2026-07-29. It is
+  already self-contained; the only workspace coupling is the `cn` import, which the `@/lib/utils` alias
+  exists to resolve.
+- **The workspace copy wins for `icon-button` and `colored-badge`**, where the consumer copy is the
+  degraded one. Adopting it wholesale would publish a trimmed button base string as the single source of
+  truth — the anti-slop principle inverted. Those two implementations must be rewritten into
+  self-contained form before they can become the source, which is real work rather than a file move.
+
+Per-item measurement and the full arbitration table: `docs/reports/studio/02-single-tree.md`.
+
+Mechanism: a two-line bridge at `apps/web/lib/utils.ts` re-exporting `cn` from
+`@workspace/ui/lib/utils`. `apps/web/tsconfig.json` already maps `@/*` to the app root. The preview
+origin's import map points the same specifier at a vendored `cn`. Showcase, preview, and consumer
+then execute **the same source text**.
+
+## What this does not change
+
+- **`packages/ui/src/components/button.tsx` stays.** The site chrome (`app-header`, `app-footer`,
+  cards, pager) imports `@workspace/ui/components/button`. That package is the showcase's own UI
+  kit; `ds-*` is the distributed artifact. Two legitimate consumers, two legitimate files.
+- **The catalog / install-artifact split stays.** `registry.json` carries no `content`; per-item
+  JSONs do. Requirement #4 of the Phase 6 submission is unaffected.
+- **The `Demo` stays out of the shipped artifact.** Consumers do not receive demos; the Demo becomes
+  a separate field alongside the source, not part of `files[]`.
+- **Phases 1–5 and the Phase 6 submission entry stand as written.**
+
+## Consequences
+
+Deleted as obsolete:
+
+- `apps/web/scripts/check-registry-drift.mjs`
+- `docs/registry/audit-2026-07-29.json` and `docs/registry/audit-2026-07-29.md`
+- the CI `drift` job
+
+Superseded:
+
+- `docs/plans/2026-07-29-drift-detection.md` — its tolerance policy no longer has two trees to
+  tolerate a difference between. The parts describing *what counts as a meaningful divergence*
+  should be recycled into the write-path validators in `docs/reports/studio/agent/01-validators.md`.
+
+The OSS survey finding recorded in this plan — *"Nobody shares files between the showcase site and
+the installable registry"* — remains accurate about those registries. It is knowingly departed from
+here, because those registries are authored by humans through pull requests and this one is not.
+
+Full context: `docs/reports/studio/` — start at its `README.md`.

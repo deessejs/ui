@@ -23,7 +23,7 @@ This repo (`design/`) is both a **knowledge base** and the **working monorepo** 
 - `learnings/` — research notes (Tailwind, shadcn, layout, page-content, marketing-ui, agent-system). Source URL + verification date convention.
 - `apps/web/` — Next.js 16 showcase site. Header, footer, nav, cards, code-block (Shiki), pager (previous/next), all on shadcn/Base UI + Tailwind v4.
 - `packages/ui/` — shadcn primitives (Base UI, not Radix), tokens, globals.css. Don't touch — this is the foundation.
-- `packages/registry/` — deessejs registry components. Currently has Button (re-export) + IconButton + ColoredBadge (real impl). Each component has `index.tsx` (component + Demo export) and `meta.ts` (ComponentMeta).
+- `packages/registry/` — deessejs registry components. 8 components (button, colored-badge, icon-button, breadcrumb, empty, tabs, input, textarea) + 1 block (empty-state), as of 2026-07-30. Each has `index.tsx` (component + Demo export) and `meta.ts` (ComponentMeta).
 - `apps/web/lib/registry/` — types, sources, aggregator. The seam for future DB-backed registry.
 - `apps/web/scripts/build-sources.mjs` — build-time codegen that reads `packages/registry/src/**/*.tsx` and emits `apps/web/lib/registry/sources.generated.ts`.
 
