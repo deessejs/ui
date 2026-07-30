@@ -113,6 +113,8 @@ The generated file gets bundled into the Next.js output. **No `fs.readFileSync` 
 - **Demo breaks SSR**: avoid hooks needing providers (React Query, theme); keep `Demo` stateless
 - **Source code wrong in Code tab**: re-run `npm run build` to regenerate `sources.generated.ts`
 - **Build fails with `Module not found @workspace/registry/...`**: confirm `packages/registry/dist/` exists. If not, run `npm run build -w @workspace/registry`
+- **New npm peer dep introduced via `dependencies[]` in `registry.json`** (e.g. `lucide-react`, `zod`): the contract test (`apps/web/scripts/contract-test.mjs`) has a hardcoded install list — add the new dep there or `npm run contract-test` (the CI `contract` job) will fail with `Cannot find module`. See memory `feedback_registry_deps_coupling.md` for the full lesson.
+- **Composing multiple ds-* items into one distributable piece**: use the **`add-block` skill** instead. Blocks are `type: registry:block`, support `registryDependencies[]`, and have a different aggregator entry shape (BlockEntry requires `Demo`). Components are single-file, no cross-references between registry items.
 
 ## Reference
 
