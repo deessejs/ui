@@ -7,8 +7,9 @@ status: decisions locked
 # Next.js 16 mechanics
 
 The framework behaviours that constrain Studio and Preview. **None of this is enabled in the repo today** —
-`apps/web/next.config.ts` is three lines and sets only `transpilePackages`. Everything below applies to
-`apps/studio` and `apps/preview` as they are built, and to `apps/web` if it ever adopts `cacheComponents`.
+`apps/web/next.config.ts` is seven lines and sets only `transpilePackages: ["@workspace/ui",
+"@workspace/registry"]`. Everything below applies to `apps/studio` and `apps/preview` as they are built,
+and to `apps/web` if it ever adopts `cacheComponents`.
 
 ---
 
@@ -79,8 +80,11 @@ approach it. The failure mode is quiet — the cache write does not happen and e
 refetches — so it is worth asserting the size rather than assuming it. See
 [preview/02-css-compile.md](../preview/02-css-compile.md#output-size).
 
-The ~300 ms propagation matters for the live update path: a maintainer watching the frame will sometimes
-see a stale render for a beat after a save. Not a bug, and worth not treating as one.
+The ~300 ms propagation figure is **not documented at that number** in Vercel's published runtime-cache
+docs as of 2026-07-30 — Vercel describes LRU eviction behaviour but does not commit to a propagation
+latency. Treat it as an empirical estimate from prior projects; the live update path should measure it
+under real load rather than relying on the figure. See
+[admin/README.md](../admin/README.md#the-live-update-path).
 
 ---
 

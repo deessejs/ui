@@ -18,7 +18,7 @@ Lifting it is most of the reason decision 7 exists.
 | Package | What you get | Change needed |
 |---|---|---|
 | `packages/database` | Drizzle + postgres-js, lazy client `Proxy` with `prepare: false` (PgBouncer/Neon transaction mode), `db:generate/migrate/push/studio/check`, pg-mem test runner | Add the three tables from [01-data-model.md](../01-data-model.md) |
-| `packages/auth` | Better Auth ^1.6.23 + Drizzle adapter, `nextCookies()`, session 7d / updateAge 1d, branded `SessionToken` types, fire-and-forget email with async error logging | Add `disableSignUp: true`; drop email verification and reset |
+| `packages/auth` | Better Auth ^1.6.25 + Drizzle adapter, `nextCookies()`, session 7d / updateAge 1d, branded `SessionToken` types, fire-and-forget email with async error logging | Add `disableSignUp: true`; drop email verification and reset |
 | `packages/api` | Hono ^4.12.28 + oRPC ^1.14.7, `base` context, `authMiddleware` throwing `ORPCError`, the body-parser `Proxy` that avoids "Body Already Used" | Add the machine-token path, separate from the human session |
 | `packages/env` | Zod server/client schemas, lazy validation `Proxy` with a browser-leak guard, the `@next/env` `forceReload` workaround | Add `DATABASE_URL`, `PREVIEW_SIGNING_SECRET`, `GITHUB_APP_*` |
 | `apps/app/proxy.ts` | Edge session gate calling `authClient.getSession` over HTTP, so builds need no `DATABASE_URL` | Reuse verbatim |

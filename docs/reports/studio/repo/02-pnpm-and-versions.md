@@ -74,8 +74,12 @@ node apps/web/scripts/build-registry.mjs  # emits public/r/<item>.json
 cd apps/web && npm run build              # next build
 ```
 
-Steps 2–4 are chained through `apps/web`'s `prebuild`. Step 1 is separate because `apps/web` imports the
-registry through `dist/`, so the workspace package must be built first.
+Step 1 sits inside `apps/web`'s own `build` script (`npm run build -w @workspace/registry && next
+build`, `apps/web/package.json`), not as a separate manual step. Steps 2–3 are chained through
+`apps/web`'s `prebuild` (`node scripts/build-sources.mjs && node scripts/build-registry.mjs`). Step 1
+runs first because `apps/web` imports the registry through `dist/`, so the workspace package must be
+built before Next consumes it. The ordering is therefore `build-sources` → `build-registry` →
+`@workspace/registry build` → `next build`, all on one `npm run build` invocation.
 
 Three constraints that make this fragile under a package-manager change:
 
@@ -98,8 +102,9 @@ Two known constraints that pnpm's stricter resolution could expose, both already
 
 ## Next.js 16.2.12
 
-Currently 16.2.6, declared and installed. `apps/web/next.config.ts` is three lines and enables nothing —
-no `cacheComponents`, no `experimental` block.
+Currently 16.2.6, declared and installed. `apps/web/next.config.ts` is seven lines and sets only
+`transpilePackages: ["@workspace/ui", "@workspace/registry"]` — no `cacheComponents`, no
+`experimental` block, no other config keys.
 
 ### CVE-2026-44576 — not affected
 

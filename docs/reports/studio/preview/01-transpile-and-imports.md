@@ -86,7 +86,7 @@ the browser   reads the map → rejects at load time as a backstop
 |---|---|
 | `react`, `react-dom` | `19.2.4`, declared exact in `apps/web`, `packages/ui`, `packages/registry` |
 | `@base-ui/react` | `^1.6.0`, installed 1.6.0 |
-| `lucide-react` | `^1.27.0`, installed 1.27.0 |
+| `lucide-react` | `^1.28.0`, installed 1.28.0 (was `^1.27.0` at the time of the 2026-07-30 writeup; 1.28.0 is the current published version) |
 | `clsx`, `tailwind-merge`, `class-variance-authority` | as declared |
 | `cn` | vendored from `@workspace/ui/lib/utils` |
 

@@ -53,7 +53,7 @@ Read all nine pairs, comparing every string literal byte-for-byte.
 
 | Item | `packages/registry/src/` copy | In sync with `base-nova`? |
 |---|---|---|
-| `button` | thin re-export of `@workspace/ui` Button + Demo | yes — cva base string byte-identical, 607 chars |
+| `button` | thin re-export of `@workspace/ui` Button + Demo | yes — cva base string byte-identical, 602 chars |
 | `breadcrumb` | thin re-export of 7 symbols + Demo | yes — 2 of 2 strings identical |
 | `tabs` | thin re-export of 4 symbols + Demo | yes — 6 of 6 strings identical |
 | `empty` | re-export of 6 symbols + Demo | yes — 7 of 7 strings identical |
@@ -214,3 +214,7 @@ Once the trees are one, these have nothing left to compare:
 
 `docs/plans/2026-07-29-drift-detection.md` stays as a record of a design that a later decision made
 unnecessary. See [repo/01-decoupling.md](./repo/01-decoupling.md) for the full removal list.
+
+**Status as of 2026-07-30:** none of the above has been deleted yet. The script, both audit files,
+the `drift` CI job, and the skill/CONTRIBUTING drift references are all still on disk. Deletion is part
+of the single-tree-collapse PR, not separate from it.

@@ -24,10 +24,10 @@ ds-tabs    ds-input        ds-textarea       ds-block-empty-state
 |---|---|---|
 | `registry.json` | 9/9 | source of truth for distribution |
 | `apps/web/lib/registry/index.tsx` | 9/9 | **second complete list, hand-maintained** |
-| `docs/registry/audit-2026-07-29.json` | 9/9 | third complete list — deleted with the drift apparatus |
+| `docs/registry/audit-2026-07-29.json` | 9/9 | third complete list — **to be deleted** with the drift apparatus |
 | `.github/workflows/ci.yml` `test -f` | **3/9** | **stale** |
 | `README.md` component table | **3/9** | **stale** |
-| `check-registry-drift.mjs` per-item branches | **3/9 asserted** | **deleted** |
+| `check-registry-drift.mjs` per-item branches | **3/9 asserted** | **to be deleted** |
 | `contract-test.mjs` item list | 9/9 | already dynamic — reads `registry.json` |
 | `contract-test.mjs` npm install list | 5/5 declared deps | complete today, hardcoded |
 | `build-registry.mjs` | 9/9 | already dynamic — reads `registry.json` |
@@ -154,9 +154,15 @@ sitting in a green build.
 Deleted under decision 5, along with:
 
 - `docs/registry/audit-2026-07-29.json` and `audit-2026-07-29.md`
-- the `drift` job in `.github/workflows/ci.yml` (leaving five jobs)
+- the `drift` job in `.github/workflows/ci.yml` (leaving five jobs after deletion)
 - the drift sections of `registry/CONTRIBUTING.md` and `.claude/skills/add-block/SKILL.md`
 - the `check-registry-drift` reference in root `CLAUDE.md`
+
+**Status as of 2026-07-30:** none of the above has been deleted yet. The script, both audit files,
+the `drift` CI job, the CONTRIBUTING drift section (`registry/CONTRIBUTING.md:89,93,131`), and the
+`add-block` skill drift references (`.claude/skills/add-block/SKILL.md:119,177,213`) are all still
+present. Deletion is bundled into the single-tree-collapse PR — running the script after the trees
+merge would be a no-op or worse.
 
 `docs/plans/2026-07-29-drift-detection.md` stays as the record of a design a later decision made
 unnecessary. So does `docs/registry/audit-2026-07-29.md`'s finding about `ds-colored-badge`, which is the

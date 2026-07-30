@@ -114,7 +114,7 @@ preview URL — the reviewer should be able to see the rendered result without c
 
 ## CI on the PR
 
-Five jobs, all of which exist today:
+Six jobs exist today in `.github/workflows/ci.yml`:
 
 | Job | Question it answers |
 |---|---|
@@ -123,9 +123,12 @@ Five jobs, all of which exist today:
 | `typecheck` | does `apps/web` compile? |
 | `build-showcase` | does the full Next build succeed? |
 | `contract` | **does this install and type-check in a real consumer project?** |
+| `drift` | (legacy) compares the two trees that decision 5 collapses |
 
-The sixth job, `drift`, is deleted — it compared the two trees that decision 5 collapses. See
-[02-single-tree.md](../02-single-tree.md#what-gets-deleted).
+The `drift` job is still present as of 2026-07-30 and is deleted as part of the single-tree-collapse
+PR — see [02-single-tree.md](../02-single-tree.md#what-gets-deleted). Until that PR lands, it
+continues to run and report green on the 3 items it actually asserts on, with the other 6 passing
+silently.
 
 `contract` is the one that cannot be replaced by write-path validation. `contract-test.mjs` copies the
 generated files into a scratch project, installs real npm dependencies, and runs `tsc`. The write path
