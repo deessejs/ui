@@ -153,3 +153,61 @@ keeping.
   one, never streams one, never queues one.
 - **Its own component library.** Studio consumes the existing `packages/ui` (Base UI). The template's
   `packages/ui` is Radix and is not lifted.
+
+## Organizational shape (one maintainer, today)
+
+The design assumes a single human role: **the maintainer**. Decisions 1, 2, 6, and the machine-token
+model all collapse to that assumption. This section makes the assumption explicit and names what has
+to change when it stops holding.
+
+### Today
+
+| Concern | Owner |
+|---|---|
+| `apps/web` deploys | The maintainer, via Vercel. |
+| Studio machine token | The maintainer, on their machine. |
+| Database access (Neon) | The maintainer. |
+| GitHub App credentials | The maintainer (env vars in the Studio deployment). |
+| Publish PR review | The maintainer. No external reviewer, no approver. |
+| On-call for incidents | The maintainer. |
+| Schema migrations | The maintainer, manual `db:migrate` against Neon. |
+| Validator rule updates | The maintainer, code review by themselves. |
+
+### The "one person" cost
+
+A singleton maintainer is the cheapest org shape but has three structural costs:
+
+- **Bus factor of one.** If the maintainer is unavailable, no one can publish, no one can rotate the
+  machine token, no one can fix an incident. Vacation, illness, or departure halts the system.
+- **No review before deploy.** Decisions on validator changes, schema migrations, and Tailwind
+  bumps are made and shipped by the same person. Validator #1 (token discipline) is meant to catch
+  this for generated code; the validator code itself is not under that guard.
+- **No second perspective on schema migrations.** `db:migrate` against production Postgres is a
+  destructive operation with no roll-forward path. Review by another pair of eyes is the cheapest
+  mitigation.
+
+### When this stops holding
+
+Triggers to re-derive the org-shape. Implementation is roughly one to two weeks of work; the
+re-derivation is the hard part.
+
+| Trigger | What changes |
+|---|---|
+| A second maintainer is added | `role` column on `user`, two machine tokens, write paths scoped by role. See [Studio org-shape trigger](../99-frictions-and-costs.md#studio-org-shape-trigger). |
+| A contributor outside the maintainer pair wants publish access | Same as above, scoped to one role. The publish procedure must remain human-only. |
+| The bus factor becomes uncomfortable | Add a co-maintainer with read access to Neon + Vercel + GitHub App. Do not split write authority until necessary. |
+| An incident requires out-of-hours response | Define an on-call rotation. Today, "out of hours" means "wait for the maintainer to wake up." |
+
+What does **not** change in any of these scenarios: the agent still runs locally, the database is
+still the authoring surface, and the preview still has no session. Those three properties survive
+the org-shape trigger unchanged.
+
+### What the maintainer does *not* do alone
+
+For completeness — things that are external to the system today and stay external:
+
+- Marketing, design-system adoption, consumer support: out of scope of Studio.
+- Vercel account management, domain registration: out of scope.
+- GitHub repository settings, branch protection: out of scope.
+- npm publish credentials (if the registry ever ships as an npm package rather than a JSON
+  catalog): out of scope.

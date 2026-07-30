@@ -97,6 +97,82 @@ The template ships no rate-limiting middleware, so nothing bounds a runaway agen
 but it is the first thing to add if the token ever leaves the maintainer's machine. See
 [99-frictions-and-costs.md](../99-frictions-and-costs.md).
 
+## Runbook: locked out without email transport
+
+Decision 6 removes the email transport (no Resend, no verification, no reset flow). The operational
+consequence is worth stating as a runbook rather than a footnote, because a locked-out maintainer at
+3am does not want to re-derive the procedure.
+
+### Symptom
+
+Cannot sign in to `studio.deessejs.com`. Either password forgotten, session expired beyond the 7-day
+window, or the machine token is lost / revoked and a new one is needed.
+
+### Recovery procedure
+
+The recovery is database surgery, by design. There is no self-serve path because there is no email
+transport.
+
+1. **Get a Postgres connection to the Studio database.** Connection string is in `DATABASE_URL`,
+   available to anyone with access to the Vercel project's environment variables (currently the
+   maintainer). Use `psql` or any SQL client.
+
+2. **Identify the user row.**
+   ```sql
+   SELECT id, email, "emailVerified", "createdAt" FROM "user";
+   ```
+   With signup closed there is exactly one row.
+
+3. **Reset the password.** Better Auth uses `scrypt` for password hashing, with parameters that are
+   not trivially reproducible from `psql`. Two options:
+
+   **Option A — replace with a known hash.** Compute a hash outside the database (Node script using
+   Better Auth's own hashing), then:
+   ```sql
+   UPDATE "user" SET "passwordHash" = '<new-hash>' WHERE id = '<user-id>';
+   ```
+   A small Node script that does this with Better Auth's API:
+   ```js
+   import { auth } from "@workspace/auth";
+   const hash = await auth.$context.password.hash("new-password-here");
+   // then run an UPDATE statement with `hash`
+   ```
+
+   **Option B — restore Better Auth's expected hash format from a temporary bcrypt hash and update
+   through Better Auth's API.** Slower; only needed if Option A's hash format is wrong. Validate by
+   attempting to sign in.
+
+4. **Invalidate active sessions** (if a session was stolen or compromised):
+   ```sql
+   DELETE FROM "session" WHERE "userId" = '<user-id>';
+   ```
+
+5. **Rotate the machine token if it was the compromised credential:**
+   ```sql
+   -- The machine token is stored hashed in a dedicated table (not the `user` row).
+   -- Mark the current token revoked:
+   UPDATE "machine_token" SET "revokedAt" = NOW() WHERE id = '<token-id>';
+   -- Then issue a new one through the Studio admin API or a one-off script.
+   ```
+
+6. **Verify access.** Sign in with the new password. Test the machine token with
+   `ds-studio whoami`.
+
+### Prevention
+
+- Store the machine token in a password manager, not in shell history or `.env` files outside the
+  repo. The CLI's `.studio.json` lookup excludes the token by design, but ad-hoc exports do not.
+- Set a calendar reminder every 6 months to verify you can sign in. Catches expired sessions before
+  they become an incident.
+- Back up `DATABASE_URL` somewhere the maintainer can reach without being signed in to Vercel. A
+  printed copy in a safe is appropriate; so is a 1Password entry shared with one trusted person.
+
+### If this runbook is wrong
+
+It assumes the current schema as of 2026-07-30. If migrations have added columns, renamed tables, or
+changed the hashing algorithm, the SQL above will need adjustment. The principle — *the recovery
+path is the database, not an email flow* — does not change.
+
 ---
 
 ## Why the preview origin has no auth at all

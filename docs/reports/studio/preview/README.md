@@ -34,6 +34,17 @@ human's entire job is looking at this frame.
 preview app does not transpile and does not compile. It has no database credentials, so it could not
 read the source even if it wanted to.
 
+## Caching model
+
+Under `cacheComponents: true` (which `apps/preview` enables in `next.config.ts`), all preview routes
+are eligible for `cacheLife('max')` and `cacheLife` applies cleanly because no route reads `cookies()`,
+`headers()`, or `searchParams`. The setup is the mirror image of the Studio app, which is dynamic by
+construction. See [repo/03-nextjs-16.md](../repo/03-nextjs-16.md) for the full framework mechanics.
+
+The version id in the URL identifies exactly one byte sequence forever — see
+[01-data-model.md](../01-data-model.md#immutability). Cache invalidation is therefore structurally
+impossible; a stale preview cannot exist as a class of bug.
+
 ---
 
 ## Immutable ids make caching free
